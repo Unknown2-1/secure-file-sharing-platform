@@ -1,0 +1,14 @@
+services:
+  postgres:
+    ports: []
+  minio:
+    ports: []
+  mailpit:
+    profiles: [development-only]
+  api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+  worker:
+    environment:
+      DOTNET_ENVIRONMENT: Production
+

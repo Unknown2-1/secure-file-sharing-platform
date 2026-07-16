@@ -1,0 +1,2 @@
+import Link from "next/link"; import { FileList } from "@/components/file-list";
+export default async function FilesPage({ searchParams }: { searchParams: Promise<{ workspace?: string }> }) { const { workspace } = await searchParams; return <main className="mx-auto min-h-screen max-w-5xl px-5 py-10"><Link href="/dashboard" className="text-blue-800 underline">← Dashboard</Link><h1 className="mb-8 mt-5 text-3xl font-bold">File saya</h1>{workspace ? <FileList workspaceId={workspace} /> : <p role="alert">Workspace belum dipilih.</p>}</main>; }

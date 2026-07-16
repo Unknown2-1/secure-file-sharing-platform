@@ -1,0 +1,39 @@
+name: Security Checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 3 * * 1"
+permissions:
+  contents: read
+  security-events: write
+jobs:
+  dependency-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v5
+        with: { dotnet-version: "10.0.x" }
+      - uses: actions/setup-node@v5
+        with: { node-version: 24, cache: npm, cache-dependency-path: frontend/package-lock.json }
+      - run: dotnet restore backend/VaultShare.sln --locked-mode
+      - run: dotnet list backend/VaultShare.sln package --vulnerable --include-transitive
+      - working-directory: frontend
+        run: npm ci
+      - working-directory: frontend
+        run: npm audit --omit=dev --audit-level=high
+      - if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@v4
+  codeql:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [csharp, javascript-typescript]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with: { languages: "${{ matrix.language }}" }
+      - uses: github/codeql-action/autobuild@v3
+      - uses: github/codeql-action/analyze@v3

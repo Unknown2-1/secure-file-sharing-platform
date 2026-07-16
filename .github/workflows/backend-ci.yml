@@ -1,0 +1,20 @@
+name: Backend CI
+on:
+  push:
+    paths: ["backend/**", "Directory.*", "global.json", ".github/workflows/backend-ci.yml"]
+  pull_request:
+    paths: ["backend/**", "Directory.*", "global.json"]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v5
+        with: { dotnet-version: "10.0.x" }
+      - run: dotnet restore backend/VaultShare.sln --locked-mode
+      - run: dotnet format backend/VaultShare.sln --verify-no-changes --no-restore
+      - run: dotnet build backend/VaultShare.sln -c Release --no-restore
+      - run: dotnet test backend/VaultShare.sln -c Release --no-build --collect:"XPlat Code Coverage"
+

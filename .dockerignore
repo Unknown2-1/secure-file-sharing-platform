@@ -1,0 +1,17 @@
+.git
+.dotnet
+.env
+**/bin
+**/obj
+frontend/node_modules
+frontend/.next
+frontend/coverage
+frontend/playwright-report
+frontend/test-results
+coverage
+data
+uploads
+temp-uploads
+backups
+logs
+

@@ -1,0 +1,2 @@
+import Link from "next/link"; import { CreateShareForm } from "@/components/create-share-form";
+export default async function NewSharePage({ searchParams }: { searchParams: Promise<{ workspace?: string }> }) { const { workspace } = await searchParams; return <main className="mx-auto min-h-screen max-w-4xl px-5 py-10"><Link href="/dashboard" className="text-blue-800 underline">← Dashboard</Link><div className="mt-6">{workspace ? <CreateShareForm workspaceId={workspace} /> : <p>Workspace belum dipilih.</p>}</div></main>; }
