@@ -92,5 +92,5 @@ Checklist hanya ditandai selesai setelah hasilnya diverifikasi.
 
 - [x] Complete technical/user/admin/deployment documentation
 - [x] Safe encrypted demo seed data
-- [ ] Screenshots dari full-stack runtime
+- [x] Screenshots dari full-stack runtime (8 PNG via Playwright)
 - [ ] Release 1.0.0 verification and GitHub readiness

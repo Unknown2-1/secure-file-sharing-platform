@@ -6,8 +6,8 @@
   root documentation baseline; backend/frontend CI definitions; landing UI;
   localization id/en; async states; responsive dashboard/files/shares
 - Sedang dikerjakan: full-stack runtime verification dengan Docker Compose,
-  visual/accessibility review, performance verification, dan portfolio screenshots
-- Belum dibuat: production KMS provider, screenshots, dan verified runtime E2E;
+  visual/accessibility review, performance verification
+- Belum dibuat: production KMS provider dan verified runtime E2E;
   ZIP bundle sengaja ditunda
 - Migration status: 14 PostgreSQL migrations generated through workspace settings;
   apply belum diverifikasi karena PostgreSQL/Docker tidak tersedia
@@ -84,5 +84,4 @@
 ## Next Steps
 1. Docker Compose full-stack verification (blocked by Docker)
 2. Playwright E2E runtime (blocked by Docker)
-3. Screenshots for portfolio
-4. GitHub release preparation
+3. GitHub release preparation
