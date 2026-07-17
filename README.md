@@ -21,8 +21,8 @@ di host lokal. Runtime Compose/ClamAV/MinIO dan browser E2E belum terverifikasi
 di mesin ini karena Docker tidak terpasang. Lihat
 [STATUS.md](STATUS.md) dan [TASKS.md](TASKS.md) untuk bukti terkini.
 
-Screenshot akan ditambahkan setelah authenticated UI dapat dijalankan melalui
-Playwright; repository tidak menggunakan mock screenshot sebagai bukti fitur.
+Screenshot tersedia di [screenshots/](screenshots/) — diambil dari Next.js dev server
+yang berjalan melalui Playwright, menunjukkan landing page dan UI component states.
 
 ## Masalah dan solusi
 
