@@ -79,8 +79,8 @@ Checklist hanya ditandai selesai setelah hasilnya diverifikasi.
 ## Phase 10 — Dashboard dan UX
 
 - [x] Dashboard metrics/chart, activity summary, dan notification center
-- [ ] Responsive UI, accessibility, localization id/en
-- [ ] Empty/loading/error states
+- [x] Responsive UI, accessibility, localization id/en
+- [x] Empty/loading/error states
 
 ## Phase 11 — Testing dan Hardening
 

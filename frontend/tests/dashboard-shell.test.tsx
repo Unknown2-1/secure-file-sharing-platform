@@ -23,7 +23,7 @@ describe("DashboardShell", () => {
     }));
     render(<DashboardShell />);
 
-    const table = await screen.findByRole("table", { name: "Data aktivitas 7 hari" });
+    const table = await screen.findByRole("table", { name: "Aktivitas 7 hari" });
     expect(table).toHaveTextContent("16 Jul 2026");
     expect(table).toHaveTextContent("2");
     expect(table).toHaveTextContent("3");

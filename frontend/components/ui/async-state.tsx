@@ -1,3 +1,6 @@
+"use client";
+
+import { useLocale } from "@/lib/i18n/locale-context";
 import { translate } from "@/lib/i18n/messages";
 
 type StateCopy = {
@@ -16,46 +19,88 @@ type ErrorStateProps = StateCopy & {
 };
 
 export function LoadingState({
-  title = translate("id", "state.loading.title"),
-  description = translate("id", "state.loading.description"),
+  title,
+  description,
 }: StateCopy) {
+  const { locale } = useLocale();
+  const resolvedTitle = title ?? translate(locale, "state.loading.title");
+  const resolvedDesc = description ?? translate(locale, "state.loading.description");
+
   return (
-    <section className="state-panel" role="status" aria-live="polite" aria-busy="true">
+    <section
+      className="state-panel"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+    >
       <span className="state-indicator" aria-hidden="true" />
-      <StateCopy title={title} description={description} />
+      <div className="state-content">
+        <h2 className="state-title">{resolvedTitle}</h2>
+        <p className="state-description">{resolvedDesc}</p>
+      </div>
     </section>
   );
 }
 
 export function EmptyState({
-  title = translate("id", "state.empty.title"),
-  description = translate("id", "state.empty.description"),
+  title,
+  description,
   actionLabel,
   onAction,
 }: EmptyStateProps) {
+  const { locale } = useLocale();
+  const resolvedTitle = title ?? translate(locale, "state.empty.title");
+  const resolvedDesc = description ?? translate(locale, "state.empty.description");
+
   return (
     <section className="state-panel">
-      <StateCopy title={title} description={description} />
-      {actionLabel && onAction && <button className="button-secondary mt-4" type="button" onClick={onAction}>{actionLabel}</button>}
+      <div className="state-content">
+        <h2 className="state-title">{resolvedTitle}</h2>
+        <p className="state-description">{resolvedDesc}</p>
+      </div>
+      {actionLabel && onAction && (
+        <button
+          className="button-secondary mt-4"
+          type="button"
+          onClick={onAction}
+        >
+          {actionLabel}
+        </button>
+      )}
     </section>
   );
 }
 
 export function ErrorState({
-  title = translate("id", "state.error.title"),
-  description = translate("id", "state.error.description"),
+  title,
+  description,
   correlationId,
   onRetry,
 }: ErrorStateProps) {
+  const { locale } = useLocale();
+  const resolvedTitle = title ?? translate(locale, "state.error.title");
+  const resolvedDesc = description ?? translate(locale, "state.error.description");
+
   return (
     <section className="state-panel border-red-200 bg-red-50" role="alert">
-      <StateCopy title={title} description={description} />
-      {correlationId && <p className="mt-3 break-all font-mono text-xs text-slate-700">Correlation ID: {correlationId}</p>}
-      {onRetry && <button className="button-secondary mt-4" type="button" onClick={onRetry}>{translate("id", "common.retry")}</button>}
+      <div className="state-content">
+        <h2 className="state-title">{resolvedTitle}</h2>
+        <p className="state-description">{resolvedDesc}</p>
+      </div>
+      {correlationId && (
+        <p className="mt-3 break-all font-mono text-xs text-slate-700">
+          Correlation ID: {correlationId}
+        </p>
+      )}
+      {onRetry && (
+        <button
+          className="button-secondary mt-4"
+          type="button"
+          onClick={onRetry}
+        >
+          {translate(locale, "common.retry")}
+        </button>
+      )}
     </section>
   );
-}
-
-function StateCopy({ title, description }: Required<StateCopy>) {
-  return <div><h2 className="font-bold text-slate-900">{title}</h2><p className="mt-1 text-sm leading-6 text-slate-600">{description}</p></div>;
 }

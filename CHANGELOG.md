@@ -17,6 +17,12 @@ Semua perubahan penting mengikuti Keep a Changelog dan Semantic Versioning.
 - Next.js Indonesian UI, component tests, Playwright scenarios, Docker Compose,
   CI/container/CodeQL workflows, threat model, and operations documentation.
 
+### Changed
+
+- Phase 10 complete: Full localization (Indonesian/English), async states
+  (loading/empty/error), responsive UI for dashboard/files/shares, accessibility
+  improvements (skip link, ARIA, semantic HTML), and comprehensive test coverage.
+
 ## [1.0.0] - Unreleased
 
 Release belum diterbitkan. Entri ini tidak akan diberi tanggal sampai seluruh
