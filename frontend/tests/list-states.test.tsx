@@ -25,7 +25,7 @@ describe("collection states", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, json: async () => ({ items: [] }) }));
     render(<FileList workspaceId="workspace-1" />);
 
-    expect(await screen.findByRole("heading", { name: "Belum ada file yang cocok" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Belum ada file" })).toBeInTheDocument();
   });
 
   it("requires an in-page confirmation before soft-deleting a file", async () => {
