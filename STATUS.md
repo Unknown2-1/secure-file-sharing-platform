@@ -20,10 +20,10 @@
   encryption, hash-only share secrets, password hashing, HttpOnly share sessions, atomic
   one-time reservation, streaming decrypt, safe preview, audit redaction, retention,
   secure headers, dan production guards covered; full runtime review belum selesai
-- Known issue: `npm install` melaporkan 1 moderate + 1 high advisory pada dependency tree
-  development; high advisory yang telah diidentifikasi berada pada transitive
-  `brace-expansion` 5.0.7 dan belum memiliki patched registry release.
-  Production dependencies tidak menggunakan lint glob tooling tersebut.
+- Known issue: `npm audit` melaporkan 2 moderate severity advisories pada transitive
+  `postcss` di nested `next/node_modules`; Next.js 16.2.10 tidak termasuk patched
+  postcss versi yang tersedia. High severity advisories sudah diperbaiki dengan
+  upgrade Next.js. Lihat https://github.com/advisories/GHSA-qx2v-qp2m-jg93
 - Blocker: Docker/Compose tidak terpasang sehingga images, service health, Testcontainers,
   ClamAV, MinIO, Mailpit, dan end-to-end Compose belum dapat diverifikasi
 
@@ -34,6 +34,8 @@
 - `npm run typecheck` — exit 0
 - `npm test -- --run` — 33 passed (12 test files)
 - `npm run build` — exit 0 (22 routes)
+- Next.js upgraded to 16.2.10 (patched high-severity advisories)
+- Remaining: 2 moderate severity advisories in transitive postcss (tracked)
 
 ### Backend (unchanged)
 - `dotnet build backend/VaultShare.sln -c Release` — exit 0, 0 warning, 0 error
@@ -79,7 +81,8 @@
 ## Git Status
 - Branch: main
 - Remote: origin https://github.com/Unknown2-1/secure-file-sharing-platform.git
-- Changed files: 14 modified + 2 new
+- Changed files: frontend package.json, package-lock.json, .next build artifact
+- Last commit: d85bbee (docs: mark screenshot portfolio complete, update task tracking)
 
 ## Next Steps
 1. Docker Compose full-stack verification (blocked by Docker)
