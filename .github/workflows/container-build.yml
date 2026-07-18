@@ -26,6 +26,14 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile }}
           push: false
+          load: true
           tags: vaultshare/${{ matrix.name }}:ci
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      - name: Scan ${{ matrix.name }} image
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: vaultshare/${{ matrix.name }}:ci
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: 1

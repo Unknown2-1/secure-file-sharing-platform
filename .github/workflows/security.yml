@@ -22,9 +22,31 @@ jobs:
       - working-directory: frontend
         run: npm ci
       - working-directory: frontend
-        run: npm audit --omit=dev --audit-level=high
+        run: npm audit --omit=dev --audit-level=moderate
       - if: github.event_name == 'pull_request'
         uses: actions/dependency-review-action@v4
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2.3.9
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: "false"
+  filesystem-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret,misconfig
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: 1
   codeql:
     runs-on: ubuntu-latest
     strategy:
