@@ -108,6 +108,7 @@ public static class DependencyInjection
         });
 
         services.AddHttpContextAccessor();
+        services.AddRouting();
         services.AddScoped<ApplicationCookieEvents>();
         services.AddScoped<IEmailService>(serviceProvider =>
             environment.IsEnvironment("Testing")

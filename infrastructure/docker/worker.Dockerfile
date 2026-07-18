@@ -5,7 +5,7 @@ COPY backend/ backend/
 RUN dotnet restore backend/src/VaultShare.Worker/VaultShare.Worker.csproj
 RUN dotnet publish backend/src/VaultShare.Worker/VaultShare.Worker.csproj -c Release --no-restore -o /app
 
-FROM mcr.microsoft.com/dotnet/runtime:10.0-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine
 RUN addgroup -S vaultshare && adduser -S vaultshare -G vaultshare
 WORKDIR /app
 COPY --from=build --chown=vaultshare:vaultshare /app .
