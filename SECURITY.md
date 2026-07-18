@@ -2,14 +2,14 @@
 
 ## Supported versions
 
-Hanya release terbaru yang didukung. Selama status pre-1.0, gunakan repository
-lokal untuk evaluasi dan jangan mengeksposnya ke internet publik.
+Hanya release stabil terbaru yang didukung. Operator tetap bertanggung jawab
+menjalankan checklist hardening dan menggunakan secret production sendiri.
 
 ## Reporting a vulnerability
 
 Jangan buka public issue untuk vulnerability sensitif. Kirim laporan ke
-`security@example.com` (**placeholder: pemilik repository wajib menggantinya**)
-dengan versi/commit, dampak, langkah reproduksi aman, dan saran mitigasi. Jangan
+`dnshadelio@gmail.com` dengan versi/commit, dampak, langkah reproduksi aman,
+dan saran mitigasi. Jangan
 sertakan data pribadi, secret, atau file pihak lain.
 
 Kami akan mengakui laporan, melakukan triage, berkoordinasi mengenai perbaikan,
@@ -26,4 +26,3 @@ Jika secret terekspos: revoke/rotate segera, periksa audit dan log, hapus dari
 distribution channels, dan evaluasi history rewrite. Jika KEK terkompromi:
 isolasi layanan, hentikan dekripsi baru, rotasi KEK, rewrap seluruh DEK,
 investigasi akses ciphertext/database, dan ikuti incident response plan.
-

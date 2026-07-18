@@ -62,7 +62,7 @@ flowchart LR
 | Open redirect | S | Sedang | no client-controlled redirect target | Future endpoint may introduce it | security regression backlog |
 | SSRF | I/T | Tinggi | service endpoints only from trusted startup configuration; no URL fetch feature | Configuration compromise | production config review |
 | Large-file DoS | D | Tinggi | max size, quota, 8 MiB request chunks, bounded 64 KiB crypto/scan buffers, cancellation | Distributed authenticated clients | upload limit and benchmark scripts |
-| Zip/decompression bomb | D | Tinggi | v1 tidak mengekstrak archive dan ZIP bundle belum diaktifkan | Scanner tetap memproses archive | design review |
+| Zip/decompression bomb | D | Tinggi | V1 tidak mengekstrak archive; ZIP bundle adalah non-goal V1 | Scanner tetap memproses archive | design review |
 | Scanner/storage outage | D | Tinggi | readiness checks, timeout, retry worker, scan fail-closed | Availability loss is intentional safe failure | health/fail-closed tests |
 | Supply-chain compromise | T/E | Tinggi | locked NuGet/npm files, CI audit, CodeQL, Dependabot, container build | Advisory lag/registry compromise | security workflow; local audit limitation |
 | Insider infrastructure | Semua | Kritis | least-privilege private services, audit, separated KEK recommendation | Privileged host operator can access memory | organizational controls required |

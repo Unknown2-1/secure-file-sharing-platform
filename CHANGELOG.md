@@ -4,6 +4,10 @@ Semua perubahan penting mengikuti Keep a Changelog dan Semantic Versioning.
 
 ## [Unreleased]
 
+Tidak ada perubahan yang belum dirilis.
+
+## [1.0.0] - 2026-07-18
+
 ### Added
 
 - Modular ASP.NET Core identity/workspace API with TOTP, session revocation,
@@ -16,6 +20,8 @@ Semua perubahan penting mengikuti Keep a Changelog dan Semantic Versioning.
   consistency command, encrypted demo seeder, and dashboard metrics.
 - Next.js Indonesian UI, component tests, Playwright scenarios, Docker Compose,
   CI/container/CodeQL workflows, threat model, and operations documentation.
+- Clean full-stack release gate, bounded 1 MiB encrypted-pipeline performance
+  smoke, full-history secret scan, filesystem scan, and runtime image scans.
 
 ### Changed
 
@@ -28,14 +34,15 @@ Semua perubahan penting mengikuti Keep a Changelog dan Semantic Versioning.
   GHSA-mg66-mrh9-m8jx, GHSA-h64f-5h5j-jqjh, GHSA-c4j6-fc7j-m34r,
   GHSA-492v-c6pp-mqqv, GHSA-wfc6-r584-vfw7, GHSA-267c-6grr-h53f,
   GHSA-36qx-fr4f-26g5).
+- Security: Forced the transitive PostCSS graph to patched 8.5.19 without a
+  Next.js downgrade and published the real private-report contact.
+- Deployment: Aligned Railway API and worker services with the maintained
+  repository-root Dockerfiles and production fail-closed requirements.
 
 ### Fixed
 
 - Screenshot portfolio: 8 PNG screenshots added showing landing page,
   dashboard, files, shares, settings (workspace/security), notifications,
   and upload UI states.
-
-## [1.0.0] - Unreleased
-
-Release belum diterbitkan. Entri ini tidak akan diberi tanggal sampai seluruh
-Definition of Done terverifikasi.
+- Non-root API/worker upload volume initialization and PostgreSQL retry-aware
+  download reservation transactions.

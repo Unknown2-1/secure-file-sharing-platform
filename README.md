@@ -4,7 +4,7 @@
 > expiring links, password protection, download limits, malware scanning,
 > audit logs, and workspace collaboration.
 
-![VaultShare status](https://img.shields.io/badge/status-active_development-1d4ed8)
+![VaultShare status](https://img.shields.io/badge/status-v1_release_candidate-1d4ed8)
 ![License](https://img.shields.io/badge/license-MIT-0f172a)
 
 VaultShare adalah modular monolith untuk berbagi file bagi individu dan tim.
@@ -16,9 +16,9 @@ tidak mengklaim kebal terhadap seluruh serangan.
 
 Core identity/workspace, resumable upload, fail-closed processing, chunked
 encryption, public/internal share, atomic download reservation, safe preview,
-audit, notification, retention, dan dashboard telah diimplementasikan dan diuji
-di host lokal. Runtime Compose/ClamAV/MinIO dan browser E2E belum terverifikasi
-di mesin ini karena Docker tidak terpasang. Lihat
+audit, notification, retention, dan dashboard telah diimplementasikan. Stack
+Compose, permission non-root, empat skenario browser, dan smoke pipeline
+terenkripsi 1 MiB telah diverifikasi di host lokal. Lihat
 [STATUS.md](STATUS.md) dan [TASKS.md](TASKS.md) untuk bukti terkini.
 
 Screenshot tersedia di [screenshots/](screenshots/) — diambil dari Next.js dev server
@@ -150,6 +150,7 @@ npm test
 npm run build
 # Dengan full Compose sehat:
 npm run test:e2e
+npm run test:performance
 ```
 
 Integration API in-process berjalan tanpa Docker; Compose dan browser tests
@@ -166,7 +167,7 @@ dengan password `ChangeMe123!`. Akun demo hanya dibuat ketika
 ## Production, key management, dan recovery
 
 Jangan gunakan credential local. Production harus memakai HTTPS, secret
-manager/KMS, private database dan bucket, ClamAV fail-closed, SMTP yang
+manager, private database dan bucket, ClamAV fail-closed, SMTP yang
 terverifikasi, backup terenkripsi, dan restore drill. Mengganti KEK dilakukan
 dengan command worker `rewrap-keys` untuk me-*rewrap* DEK tanpa mengenkripsi
 ulang ciphertext. Gunakan dry-run dan batch sesuai runbook.
@@ -179,8 +180,8 @@ Lihat [deployment](docs/deployment.md), [key management](docs/key-management.md)
 Server memiliki kemampuan dekripsi; kompromi API dan KEK dapat membuka file.
 Secure deletion dibatasi oleh versioning, snapshot, lifecycle, dan retensi
 backup provider. Scanning mengurangi risiko malware tetapi tidak menjamin file
-aman. ZIP bundle, strict mid-stream revoke, E2EE klien, multi-region, dan mobile
-native berada di luar v1.
+aman. ZIP bundle adalah non-goal V1; strict mid-stream revoke, E2EE klien,
+multi-region, cloud-KMS provider, dan mobile native juga berada di luar V1.
 
 ## Kontribusi, security, roadmap, license
 

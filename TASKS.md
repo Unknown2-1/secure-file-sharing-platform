@@ -14,7 +14,7 @@ Checklist hanya ditandai selesai setelah hasilnya diverifikasi.
 - [x] Formatter dan static analysis lulus
 - [x] Backend base tests lulus
 - [x] Frontend lint, typecheck, unit tests, dan build lulus
-- [ ] Docker Compose sehat dari kondisi bersih
+- [x] Docker Compose sehat dari kondisi bersih
 
 ## Phase 2 — Authentication dan Workspace
 
@@ -67,7 +67,8 @@ Checklist hanya ditandai selesai setelah hasilnya diverifikasi.
 
 - [x] Safe PNG/JPEG/WebP, text, dan sandboxed PDF preview
 - [x] Unsafe preview rejection by allowlist dan tests
-- [x] Evaluasi ZIP streaming; ditunda karena authenticated per-entry streaming dan abuse limits belum cukup matang
+- [x] Evaluasi ZIP streaming; ditetapkan sebagai non-goal V1 karena authenticated
+  per-entry streaming dan abuse limits belum cukup matang
 
 ## Phase 9 — Audit, Security, dan Retention
 
@@ -84,8 +85,8 @@ Checklist hanya ditandai selesai setelah hasilnya diverifikasi.
 
 ## Phase 11 — Testing dan Hardening
 
-- [ ] Full unit, integration, security, Playwright runtime, dan race tests
-- [ ] Performance, static/dependency/secret/container scans
+- [x] Full unit, integration, security, Playwright runtime, dan race tests
+- [ ] Performance, static/dependency/secret/container scans (final release run/CI)
 - [x] Threat model and production guard review
 
 ## Phase 12 — Documentation dan Portfolio

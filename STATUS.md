@@ -1,90 +1,49 @@
 # VaultShare Status
 
-- Project status: **Phase 10 complete; ready for full-stack verification and GitHub release**
-- Selesai: repository control files; .NET 10 solution; Next.js foundation;
-  liveness/readiness; security-header baseline; Docker/Compose definitions;
-  root documentation baseline; backend/frontend CI definitions; landing UI;
-  localization id/en; async states; responsive dashboard/files/shares
-- Sedang dikerjakan: full-stack runtime verification dengan Docker Compose,
-  visual/accessibility review, performance verification
-- Belum dibuat: production KMS provider dan verified runtime E2E;
-  ZIP bundle sengaja ditunda
-- Migration status: 14 PostgreSQL migrations generated through workspace settings;
-  apply belum diverifikasi karena PostgreSQL/Docker tidak tersedia
-- Test status: backend 49 meaningful tests passed / 0 failed / 0 skipped;
-  frontend 33 tests passed / 0 failed
-- Build status: backend+worker Release succeeded (0 warnings, 0 errors);
-  frontend production build succeeded
-- Security review status: identity/session/TOTP, CSRF/CORS, workspace isolation/settings,
-  resumable upload, MIME inspection, fail-closed scan outcomes, authenticated chunked
-  encryption, hash-only share secrets, password hashing, HttpOnly share sessions, atomic
-  one-time reservation, streaming decrypt, safe preview, audit redaction, retention,
-  secure headers, dan production guards covered; full runtime review belum selesai
-- Known issue: `npm audit` melaporkan 2 moderate severity advisories pada transitive
-  `postcss` di nested `next/node_modules`; Next.js 16.2.10 tidak termasuk patched
-  postcss versi yang tersedia. High severity advisories sudah diperbaiki dengan
-  upgrade Next.js. Lihat https://github.com/advisories/GHSA-qx2v-qp2m-jg93
-- Blocker: Docker/Compose tidak terpasang sehingga images, service health, Testcontainers,
-  ClamAV, MinIO, Mailpit, dan end-to-end Compose belum dapat diverifikasi
+Evidence terakhir diperbarui pada **2026-07-18**.
 
-## Verification evidence — 2026-07-17
+- Project status: **V1 locally verified; GitHub Actions and release publication pending**.
+- Scope V1 selesai: identity/workspace, resumable upload, fail-closed malware
+  processing, chunked envelope encryption, file management, public/internal
+  share, preview, download limits, audit, notifications, retention, dashboard,
+  localization, dan responsive UI.
+- Migration status: 14 PostgreSQL migrations berhasil diterapkan oleh stack
+  Compose lokal.
+- Backend: 49 passed, 0 failed, 0 skipped; Release build 0 warning/0 error.
+- Frontend: 34 unit/component tests, lint dan strict typecheck lulus, production
+  build menghasilkan 22 routes.
+- Browser: 4/4 core E2E lulus; encrypted-pipeline smoke 1 MiB lulus 1/1 dalam
+  batas 120 detik.
+- Runtime: clean Compose project dan seluruh migration lulus; API dan worker
+  berjalan sebagai uid 100/gid 101, volume temporary
+  upload writable tanpa mode `777`, serta health live/ready lulus.
+- Dependency: npm audit moderate-or-higher bersih setelah seluruh PostCSS
+  di-resolve ke 8.5.19; audit NuGet tidak menemukan package rentan.
+- Release gates: backend/frontend CI, clean full-stack E2E, dependency/CodeQL,
+  full-history Gitleaks, Trivy filesystem, dan Trivy image scan tersedia.
+- Security contact: `dnshadelio@gmail.com`.
 
-### Frontend (Phase 10 complete)
-- `npm run lint` — exit 0 (0 errors, 0 warnings)
-- `npm run typecheck` — exit 0
-- `npm test -- --run` — 33 passed (12 test files)
-- `npm run build` — exit 0 (22 routes)
-- Next.js upgraded to 16.2.10 (patched high-severity advisories)
-- Remaining: 2 moderate severity advisories in transitive postcss (tracked)
+## Batas V1
 
-### Backend (unchanged)
-- `dotnet build backend/VaultShare.sln -c Release` — exit 0, 0 warning, 0 error
-- `dotnet test backend/VaultShare.sln -c Release` — 49 passed (17 unit + 26 integration + 6 security)
+- KEK 32 byte berasal dari environment yang diinjeksi secret manager. Ini bukan
+  cloud KMS; provider KMS vendor adalah opsi masa depan.
+- ZIP bundle, E2EE/zero-knowledge, strict mid-stream revoke, multi-region,
+  Kubernetes, dan mobile native adalah non-goal V1.
+- Server tetap dapat mendekripsi file setelah authorization. Restore dan secure
+  deletion tetap bergantung pada kebijakan backup/object-storage operator.
 
-### Local runtime
-- `npm run dev` — Frontend running at http://localhost:3000
-- `curl -I http://localhost:3000` — HTTP 200 OK
+## Verification evidence — 2026-07-18
 
-## Phase 10 Implementation Summary
+- `dotnet test backend/VaultShare.sln -c Release` — 49 passed.
+- `npm test -- --run` — 34 passed setelah security contact regression test.
+- `npm run lint`, `npm run typecheck`, `npm run build` — exit 0; 22 routes.
+- `npm audit --omit=dev --audit-level=moderate` — 0 vulnerabilities.
+- `infrastructure/scripts/verify-running-stack.sh` — exit 0.
+- `npm run test:e2e` — 4 passed.
+- `npm run test:performance` — 1 passed; payload 1 MiB.
+- Railway API dan worker image build dari root context — exit 0.
 
-### Localization (id/en)
-- Indonesian default, English supported
-- Locale persisted in cookie (`vaultshare_locale`)
-- Language switcher component with accessible select
-- All dashboard, files, shares text translated
+## Remaining release operations
 
-### Async States
-- LoadingState with aria-live and aria-busy
-- EmptyState with optional action button
-- ErrorState with correlation ID and retry
-- Used consistently in DashboardShell, FileList, ShareList
-
-### Responsive UI
-- Dashboard metrics: responsive grid (1/2/4 columns)
-- Files: responsive table with mobile-friendly truncation
-- Shares: responsive card layout
-- Navigation: flex-wrap with gap
-
-### Accessibility
-- Skip-to-content link
-- Semantic HTML (main, nav, section, article)
-- ARIA labels on navigation
-- Screen reader alternative table for chart
-- Focus-visible states on buttons
-- Reduced motion support in CSS
-
-### Testing Added
-- i18n.test.ts: 9 tests (catalog, interpolation, fallback, utilities)
-- async-state.test.tsx: 5 tests (locale context, states)
-- Updated: dashboard-shell.test.tsx, list-states.test.tsx
-
-## Git Status
-- Branch: main
-- Remote: origin https://github.com/Unknown2-1/secure-file-sharing-platform.git
-- Changed files: frontend package.json, package-lock.json, .next build artifact
-- Last commit: d85bbee (docs: mark screenshot portfolio complete, update task tracking)
-
-## Next Steps
-1. Docker Compose full-stack verification (blocked by Docker)
-2. Playwright E2E runtime (blocked by Docker)
-3. GitHub release preparation
+1. Push fast-forward ke `main` dan tunggu seluruh GitHub Actions hijau.
+2. Publikasikan tag dan GitHub Release `v1.0.0`.

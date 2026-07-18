@@ -26,14 +26,17 @@ docker compose up -d --build --wait
 cd frontend
 npx playwright install chromium
 npm run test:e2e
+npm run test:performance
 ```
 
 Playwright memakai browser context penerima terpisah, password salah/benar,
 download bytes, batas download, revoke, viewer denial, serta mobile viewport.
+Suite inti berisi empat skenario. Smoke performance memproses, membagikan, dan
+mengunduh kembali payload terenkripsi 1 MiB dengan batas 120 detik.
 Artefak failure berada di `output/playwright/` dan tidak masuk Git. Workflow
-`integration-e2e.yml` menjalankan skenario tersebut di runner Docker. Local
-machine saat penulisan tidak memiliki Docker sehingga hasil runtime E2E tidak
-boleh dianggap lulus hanya dari `--list`.
+`integration-e2e.yml` membuat volume bersih, memverifikasi health dan permission
+non-root, lalu menjalankan kedua suite di runner Docker. Verifikasi lokal
+2026-07-18 menghasilkan 4/4 core E2E dan 1/1 performance smoke.
 
 Generator benchmark:
 
