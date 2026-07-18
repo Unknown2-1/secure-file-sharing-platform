@@ -4,20 +4,28 @@
 [postgresql]
   version = "15"
 
-[[service]]
-  name = "api"
-  dockerfile = "infrastructure/docker/api.Dockerfile"
+[[deployments]]
+  service = "api"
+  source = "./infrastructure/docker/api.Dockerfile"
   healthcheck = "/health/live"
   port = 8080
-  envVars = [
-    { key = "ASPNETCORE_ENVIRONMENT", value = "Production" },
-    { key = "SEED_DEMO_DATA", value = "false" },
-    { key = "FILE_ENCRYPTION_KEY_ID", value = "prod-v1" },
-    { key = "CLAMAV_FAIL_CLOSED", value = "false" },
-    { key = "LOG_LEVEL", value = "Warning" },
-  ]
 
-[[service]]
-  name = "frontend"
-  dockerfile = "infrastructure/docker/frontend.Dockerfile"
+[deployments.env]
+  ASPNETCORE_ENVIRONMENT = "Production"
+  SEED_DEMO_DATA = "false"
+  FILE_ENCRYPTION_KEY_ID = "prod-v1"
+  CLAMAV_FAIL_CLOSED = "false"
+  OBJECT_STORAGE_ENDPOINT = ""
+  OBJECT_STORAGE_ACCESS_KEY = ""
+  OBJECT_STORAGE_SECRET_KEY = ""
+  OBJECT_STORAGE_BUCKET = "vaultshare"
+  OBJECT_STORAGE_USE_SSL = "false"
+  CLAMAV_HOST = ""
+
+[[deployments]]
+  service = "frontend"
+  source = "./infrastructure/docker/frontend.Dockerfile"
   port = 3000
+
+[deployments.env]
+  NEXT_PUBLIC_API_URL = ""
