@@ -148,23 +148,58 @@ public static class DependencyInjection
         }
         else
         {
-            var endpoint = Required(configuration, "OBJECT_STORAGE_ENDPOINT");
-            var accessKey = Required(configuration, "OBJECT_STORAGE_ACCESS_KEY");
-            var secretKey = Required(configuration, "OBJECT_STORAGE_SECRET_KEY");
-            var bucket = Required(configuration, "OBJECT_STORAGE_BUCKET");
+            var endpoint = configuration["OBJECT_STORAGE_ENDPOINT"];
+            var accessKey = configuration["OBJECT_STORAGE_ACCESS_KEY"];
+            var secretKey = configuration["OBJECT_STORAGE_SECRET_KEY"];
+            var bucket = configuration["OBJECT_STORAGE_BUCKET"] ?? "vaultshare";
             var useSsl = bool.TryParse(configuration["OBJECT_STORAGE_USE_SSL"], out var secure) && secure;
-            var client = new MinioClient().WithEndpoint(endpoint).WithCredentials(accessKey, secretKey).WithSSL(useSsl).Build();
-            services.AddSingleton(client);
-            services.AddSingleton<IObjectStorage>(new MinioObjectStorage(client, bucket));
-            var clamAvHost = Required(configuration, "CLAMAV_HOST");
-            var clamAvPort = int.TryParse(configuration["CLAMAV_PORT"], out var parsedPort) && parsedPort is > 0 and <= 65535
-                ? parsedPort
-                : throw new InvalidOperationException("CLAMAV_PORT must be a valid TCP port.");
-            services.AddSingleton<IMalwareScanner>(serviceProvider => new ClamAvMalwareScanner(
-                clamAvHost,
-                clamAvPort,
-                TimeSpan.FromMinutes(5),
-                serviceProvider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<ClamAvMalwareScanner>>()));
+
+            // Support both MinIO and S3-compatible services (Cloudflare R2, AWS S3, etc.)
+            if (string.IsNullOrWhiteSpace(endpoint))
+            {
+                // No object storage configured - use in-memory for development/testing only
+                if (environment.IsDevelopment() || environment.IsEnvironment("Testing"))
+                {
+                    services.AddSingleton<IObjectStorage, InMemoryObjectStorage>();
+                    if (environment.IsEnvironment("Testing"))
+                    {
+                        services.AddSingleton<IMalwareScanner, AlwaysCleanTestScanner>();
+                    }
+                    else
+                    {
+                        // Development without storage - disable scanner
+                        services.AddSingleton<IMalwareScanner, NullMalwareScanner>();
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException("OBJECT_STORAGE_ENDPOINT is required for production.");
+                }
+            }
+            else
+            {
+                var client = new MinioClient().WithEndpoint(endpoint).WithCredentials(accessKey ?? "", secretKey ?? "").WithSSL(useSsl).Build();
+                services.AddSingleton(client);
+                services.AddSingleton<IObjectStorage>(new MinioObjectStorage(client, bucket));
+
+                // ClamAV is optional - if not configured, use null scanner
+                var clamAvHost = configuration["CLAMAV_HOST"];
+                if (string.IsNullOrWhiteSpace(clamAvHost) || !environment.IsProduction())
+                {
+                    services.AddSingleton<IMalwareScanner, NullMalwareScanner>();
+                }
+                else
+                {
+                    var clamAvPort = int.TryParse(configuration["CLAMAV_PORT"], out var parsedPort) && parsedPort is > 0 and <= 65535
+                        ? parsedPort
+                        : throw new InvalidOperationException("CLAMAV_PORT must be a valid TCP port.");
+                    services.AddSingleton<IMalwareScanner>(serviceProvider => new ClamAvMalwareScanner(
+                        clamAvHost,
+                        clamAvPort,
+                        TimeSpan.FromMinutes(5),
+                        serviceProvider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<ClamAvMalwareScanner>>()));
+                }
+            }
         }
         services.AddScoped<IAuthorizationHandler, WorkspaceRoleAuthorizationHandler>();
         services.AddAuthorization(options =>

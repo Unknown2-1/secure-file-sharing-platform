@@ -1,0 +1,23 @@
+[railway]
+  plugin = ["postgresql"]
+
+[postgresql]
+  version = "15"
+
+[[service]]
+  name = "api"
+  dockerfile = "infrastructure/docker/api.Dockerfile"
+  healthcheck = "/health/live"
+  port = 8080
+  envVars = [
+    { key = "ASPNETCORE_ENVIRONMENT", value = "Production" },
+    { key = "SEED_DEMO_DATA", value = "false" },
+    { key = "FILE_ENCRYPTION_KEY_ID", value = "prod-v1" },
+    { key = "CLAMAV_FAIL_CLOSED", value = "false" },
+    { key = "LOG_LEVEL", value = "Warning" },
+  ]
+
+[[service]]
+  name = "frontend"
+  dockerfile = "infrastructure/docker/frontend.Dockerfile"
+  port = 3000
