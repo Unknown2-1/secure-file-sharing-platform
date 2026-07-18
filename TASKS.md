@@ -86,7 +86,7 @@ Checklist hanya ditandai selesai setelah hasilnya diverifikasi.
 ## Phase 11 — Testing dan Hardening
 
 - [x] Full unit, integration, security, Playwright runtime, dan race tests
-- [ ] Performance, static/dependency/secret/container scans (final release run/CI)
+- [x] Performance, static/dependency/secret/container scans
 - [x] Threat model and production guard review
 
 ## Phase 12 — Documentation dan Portfolio
@@ -94,4 +94,4 @@ Checklist hanya ditandai selesai setelah hasilnya diverifikasi.
 - [x] Complete technical/user/admin/deployment documentation
 - [x] Safe encrypted demo seed data
 - [x] Screenshots dari full-stack runtime (8 PNG via Playwright)
-- [ ] Release 1.0.0 verification and GitHub readiness
+- [x] Release 1.0.0 verification and GitHub readiness

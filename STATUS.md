@@ -2,7 +2,7 @@
 
 Evidence terakhir diperbarui pada **2026-07-18**.
 
-- Project status: **V1 locally verified; GitHub Actions and release publication pending**.
+- Project status: **V1 verified and release-ready**.
 - Scope V1 selesai: identity/workspace, resumable upload, fail-closed malware
   processing, chunked envelope encryption, file management, public/internal
   share, preview, download limits, audit, notifications, retention, dashboard,
@@ -43,7 +43,9 @@ Evidence terakhir diperbarui pada **2026-07-18**.
 - `npm run test:performance` — 1 passed; payload 1 MiB.
 - Railway API dan worker image build dari root context — exit 0.
 
-## Remaining release operations
+## GitHub release gates
 
-1. Push fast-forward ke `main` dan tunggu seluruh GitHub Actions hijau.
-2. Publikasikan tag dan GitHub Release `v1.0.0`.
+- Backend CI dan Frontend CI — lulus.
+- Clean Compose Integration/E2E — lulus.
+- Dependency audit, Gitleaks, Trivy filesystem, dan CodeQL C#/JavaScript — lulus.
+- API, worker, dan frontend image build serta Trivy image scan — lulus.
