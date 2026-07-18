@@ -13,10 +13,11 @@ FROM node:24-alpine
 ENV NODE_ENV=production
 WORKDIR /app
 RUN addgroup -S vaultshare && adduser -S vaultshare -G vaultshare
+RUN rm -rf /usr/local/lib/node_modules/npm \
+    && rm -f /usr/local/bin/npm /usr/local/bin/npx
 COPY --from=build --chown=vaultshare:vaultshare /app/.next/standalone ./
 COPY --from=build --chown=vaultshare:vaultshare /app/.next/static ./.next/static
 COPY --from=build --chown=vaultshare:vaultshare /app/public ./public
 USER vaultshare
 EXPOSE 3000
 CMD ["node", "server.js"]
-
