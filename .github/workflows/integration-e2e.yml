@@ -1,5 +1,15 @@
 name: Integration and E2E
 on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "frontend/**"
+      - "infrastructure/**"
+      - "docker-compose.yml"
+      - "Directory.*"
+      - "global.json"
+      - ".github/workflows/integration-e2e.yml"
   pull_request:
   workflow_dispatch:
 permissions:
@@ -17,8 +27,12 @@ jobs:
           cp .env.example .env
           sed -i "s|^FILE_ENCRYPTION_KEK=.*|FILE_ENCRYPTION_KEK=$(openssl rand -base64 32)|" .env
           sed -i "s|^PRIVACY_IP_HASH_KEY=.*|PRIVACY_IP_HASH_KEY=$(openssl rand -base64 32)|" .env
+      - name: Ensure clean Compose state
+        run: docker compose down -v --remove-orphans
       - name: Build and start full stack
         run: docker compose up -d --build --wait --wait-timeout 300
+      - name: Verify running stack and upload volume
+        run: infrastructure/scripts/verify-running-stack.sh
       - name: Install browser test dependencies
         working-directory: frontend
         run: |
@@ -29,6 +43,11 @@ jobs:
         env:
           E2E_BASE_URL: http://localhost:8080
         run: npm run test:e2e
+      - name: Run bounded performance smoke
+        working-directory: frontend
+        env:
+          E2E_BASE_URL: http://localhost:8080
+        run: npm run test:performance
       - name: Capture service logs on failure
         if: failure()
         run: docker compose logs --no-color > compose.log

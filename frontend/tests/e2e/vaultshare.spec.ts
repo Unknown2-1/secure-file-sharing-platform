@@ -91,6 +91,45 @@ test("dashboard tetap usable pada viewport mobile", async ({ page }) => {
   await expect(page.getByRole("link", { name: "Notifikasi" })).toBeVisible();
 });
 
+test("@performance 1 MiB encrypted pipeline completes within 120 seconds", async ({ page, browser }) => {
+  test.setTimeout(130_000);
+  await login(page, "owner@example.com", demoPassword);
+  const workspaceId = await firstWorkspaceId(page);
+  const filename = `performance-${Date.now()}.bin`;
+  const fixture = Buffer.alloc(1024 * 1024, 0x5a);
+  const startedAt = Date.now();
+
+  await page.goto(`/upload?workspace=${workspaceId}`);
+  await page.locator('input[type="file"]').setInputFiles({
+    name: filename,
+    mimeType: "application/octet-stream",
+    buffer: fixture,
+  });
+  await page.getByRole("button", { name: "Unggah" }).click();
+  await expect(page.getByText(/menunggu pemeriksaan keamanan/)).toBeVisible();
+  await waitUntilAvailable(page, workspaceId, filename);
+
+  await page.goto(`/shares/new?workspace=${workspaceId}`);
+  await page.getByText(filename, { exact: true }).click();
+  await page.getByLabel("2. Nama share").fill(`Performance ${Date.now()}`);
+  await page.getByLabel("Password opsional").fill("PerformancePass123!");
+  await page.getByRole("button", { name: "Buat share" }).click();
+  const shareUrl = await page.getByLabel("Link share").inputValue();
+
+  const recipient = await browser.newContext();
+  const publicPage = await recipient.newPage();
+  await publicPage.goto(shareUrl);
+  await publicPage.getByLabel("Password share").fill("PerformancePass123!");
+  await publicPage.getByRole("button", { name: "Lanjutkan" }).click();
+  const downloadUrl = expectString(await publicPage.getByRole("link", { name: "Unduh" }).getAttribute("href"));
+  const download = await recipient.request.get(downloadUrl);
+  expect(download.status()).toBe(200);
+  expect(await download.body()).toEqual(fixture);
+  await recipient.close();
+
+  expect(Date.now() - startedAt).toBeLessThan(120_000);
+});
+
 async function login(page: Page, email: string, password: string) {
   await page.goto("/login");
   await page.getByLabel("Email").fill(email);

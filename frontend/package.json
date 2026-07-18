@@ -10,8 +10,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test",
-    "test:e2e:headed": "playwright test --headed"
+    "test:e2e": "playwright test --grep-invert @performance",
+    "test:performance": "playwright test --grep @performance",
+    "test:e2e:headed": "playwright test --grep-invert @performance --headed"
   },
   "dependencies": {
     "next": "^16.2.10",
