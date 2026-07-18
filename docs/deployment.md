@@ -21,10 +21,27 @@ Secure cookie dan HSTS dari sisi browser setelah TLS termination.
 ## Managed services
 
 PostgreSQL dapat diganti managed PostgreSQL dan MinIO dengan private
-S3-compatible storage. Application-level encryption tetap wajib. KEK harus dari
-AWS KMS, Azure Key Vault, Google Cloud KMS, atau Vault melalui implementasi
-`IKeyEncryptionProvider`; local environment provider hanya untuk self-hosted
-deployment yang secret injection-nya terlindungi.
+S3-compatible storage. Application-level encryption tetap wajib. V1 memakai
+KEK 32 byte yang diinjeksi lewat environment/secret manager dan dirotasi dengan
+identifier versi; integrasi AWS KMS, Azure Key Vault, Google Cloud KMS, atau
+Vault merupakan opsi provider masa depan, bukan kemampuan V1 yang diklaim.
+
+## Railway shared-monorepo deployment
+
+Buat layanan API dan worker terpisah dari root repository. Tetapkan config path
+API ke `/railway.toml` dan config path worker ke `/railway.worker.toml`. Jangan
+tetapkan root directory layanan ke `/backend`, karena kedua build memakai file
+`Directory.*` dan `global.json` dari root repository.
+
+Injeksikan `ASPNETCORE_ENVIRONMENT=Production`, `SEED_DEMO_DATA=false`,
+`CLAMAV_FAIL_CLOSED=true`, variabel koneksi database/object storage/ClamAV,
+`PUBLIC_APP_URL`, `FRONTEND_URL`, dan `CORS_ALLOWED_ORIGINS` HTTPS yang eksplisit,
+serta secret 32 byte terpisah untuk `FILE_ENCRYPTION_KEK` dan
+`PRIVACY_IP_HASH_KEY`. Layanan API saja tidak lengkap: worker harus memakai
+PostgreSQL, object storage, ClamAV, dan KEK yang sama.
+
+Semua nilai tersebut diatur melalui dashboard Railway atau secret manager dan
+sengaja tidak ditulis ke config-as-code di repository.
 
 ## Production checklist
 
@@ -34,7 +51,7 @@ deployment yang secret injection-nya terlindungi.
 - PostgreSQL/object storage private; ClamAV fail-closed; SMTP valid.
 - Quota, request size, rate limit, retention, and worker interval ditinjau.
 - Backup encrypted dan restore drill berhasil; log redaction diverifikasi.
-- Dependency/CodeQL/container workflows lulus dan security contact diganti.
+- Dependency/CodeQL/container workflows lulus dan security contact valid.
 
-Jangan deploy nyata tanpa domain, certificate, production KMS/secret, database,
+Jangan deploy nyata tanpa domain, certificate, production secret, database,
 object storage, dan SMTP credential milik operator.
