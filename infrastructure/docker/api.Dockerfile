@@ -7,9 +7,11 @@ RUN dotnet publish backend/src/VaultShare.Api/VaultShare.Api.csproj -c Release -
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine
 RUN addgroup -S vaultshare && adduser -S vaultshare -G vaultshare
+RUN mkdir -p /var/lib/vaultshare/uploads \
+    && chown -R vaultshare:vaultshare /var/lib/vaultshare \
+    && chmod 750 /var/lib/vaultshare/uploads
 WORKDIR /app
 COPY --from=build --chown=vaultshare:vaultshare /app .
 USER vaultshare
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "VaultShare.Api.dll"]
-
