@@ -33,11 +33,18 @@ internal sealed class DownloadService(
         {
             if (dbContext.Database.IsRelational())
             {
-                await using var transaction = await dbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken);
-                var result = await ReserveCoreAsync(session.Id, session.ShareId, fileId, cancellationToken);
-                if (result.Status == ShareOperationStatus.Success) await transaction.CommitAsync(cancellationToken);
-                else await transaction.RollbackAsync(cancellationToken);
-                return result;
+                var strategy = dbContext.Database.CreateExecutionStrategy();
+                return await strategy.ExecuteAsync(async () =>
+                {
+                    await using var transaction = await dbContext.Database.BeginTransactionAsync(
+                        IsolationLevel.Serializable, cancellationToken);
+                    var result = await ReserveCoreAsync(session.Id, session.ShareId, fileId, cancellationToken);
+                    if (result.Status == ShareOperationStatus.Success)
+                        await transaction.CommitAsync(cancellationToken);
+                    else
+                        await transaction.RollbackAsync(cancellationToken);
+                    return result;
+                });
             }
             return await ReserveCoreAsync(session.Id, session.ShareId, fileId, cancellationToken);
         }
