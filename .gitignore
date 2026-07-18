@@ -27,6 +27,7 @@ logs/
 .idea/
 .vscode/*
 !.vscode/extensions.json
+.worktrees/
 *.user
 *.suo
 .DS_Store
